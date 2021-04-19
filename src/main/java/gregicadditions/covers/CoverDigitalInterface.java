@@ -20,10 +20,11 @@ import gregtech.api.cover.ICoverable;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.widgets.*;
-import gregtech.api.metatileentity.IFastRenderMetaTileEntity;
+import gregtech.api.metatileentity.IRenderMetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
+import gregtech.api.util.Position;
 import gregtech.common.metatileentities.storage.MetaTileEntityQuantumChest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -61,9 +62,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
-public class CoverDigitalInterface extends CoverBehavior implements IFastRenderMetaTileEntity, ITickable, CoverWithUI {
+public class CoverDigitalInterface extends CoverBehavior implements IRenderMetaTileEntity, ITickable, CoverWithUI {
 
     public static String path = "cover.digital";
     public static IEnergyContainer proxyCapability = new IEnergyContainer() {
@@ -460,48 +460,38 @@ public class CoverDigitalInterface extends CoverBehavior implements IFastRenderM
 
     @Override
     public ModularUI createUI(EntityPlayer player) {
-        WidgetGroup primaryGroup = new WidgetGroup();
-        primaryGroup.addWidget(new LabelWidget(10, 5, "Digital Interface", 0));
+        WidgetGroup primaryGroup = new WidgetGroup(new Position(0, 10));
+        primaryGroup.addWidget(new LabelWidget(10, 5, "metaitem.cover.digital.name", 0));
         ToggleButtonWidget[] buttons = new ToggleButtonWidget[5];
-        buttons[0] = new ToggleButtonWidget(40, 20, 20, 20, ClientHandler.BUTTON_FLUID, () -> this.mode != MODE.FLUID, (pressed) -> {
-            setMode(MODE.FLUID);
-            if (!pressed) return;
-            Stream.of(buttons).forEach(button -> { if (button != buttons[0]) button.handleClientAction(1, new PacketBuffer(null){@Override public boolean readBoolean() { return false; }});});
-        }){ @Override public boolean mouseClicked(int mouseX, int mouseY, int button) { if (mode == MODE.FLUID) return false;return super.mouseClicked(mouseX, mouseY, button); }};
-        buttons[1] = new ToggleButtonWidget(60, 20, 20, 20, ClientHandler.BUTTON_ITEM, () -> this.mode != MODE.ITEM, (pressed) -> {
-            setMode(MODE.ITEM);
-            if (!pressed) return;
-            Stream.of(buttons).forEach(button -> { if (button != buttons[1]) button.handleClientAction(1, new PacketBuffer(null){@Override public boolean readBoolean() { return false; }});});
-        }){ @Override public boolean mouseClicked(int mouseX, int mouseY, int button) { if (mode == MODE.ITEM) return false;return super.mouseClicked(mouseX, mouseY, button); }};
-        buttons[2] = new ToggleButtonWidget(80, 20, 20, 20, ClientHandler.BUTTON_ENERGY, () -> this.mode != MODE.ENERGY, (pressed) -> {
-            setMode(MODE.ENERGY);
-            if (!pressed) return;
-            Stream.of(buttons).forEach(button -> { if (button != buttons[2]) button.handleClientAction(1, new PacketBuffer(null){@Override public boolean readBoolean() { return false; }});});
-        }){ @Override public boolean mouseClicked(int mouseX, int mouseY, int button) { if (mode == MODE.ENERGY) return false;return super.mouseClicked(mouseX, mouseY, button); }};
-        buttons[3] = new ToggleButtonWidget(100, 20, 20, 20, ClientHandler.BUTTON_MACHINE, () -> this.mode != MODE.MACHINE, (pressed) -> {
-            setMode(MODE.MACHINE);
-            if (!pressed) return;
-            Stream.of(buttons).forEach(button -> { if (button != buttons[3]) button.handleClientAction(1, new PacketBuffer(null){@Override public boolean readBoolean() { return false; }});});
-        }){ @Override public boolean mouseClicked(int mouseX, int mouseY, int button) { if (mode == MODE.MACHINE) return false;return super.mouseClicked(mouseX, mouseY, button); }};
-        buttons[4] = new ToggleButtonWidget(140, 20, 20, 20, ClientHandler.BUTTON_INTERFACE, () -> this.mode != MODE.PROXY, (pressed) -> {
-            setMode(MODE.PROXY);
-            if (!pressed) return;
-            Stream.of(buttons).forEach(button -> { if (button != buttons[4]) button.handleClientAction(1, new PacketBuffer(null){@Override public boolean readBoolean() { return false; }});});
-        }){ @Override public boolean mouseClicked(int mouseX, int mouseY, int button) { if (mode == MODE.PROXY) return false;return super.mouseClicked(mouseX, mouseY, button); }};
-        primaryGroup.addWidget(new LabelWidget(10, 25, "Mode:", 0));
+        buttons[0] = new ToggleButtonWidget(40, 20, 20, 20, ClientHandler.BUTTON_FLUID, () -> this.mode == MODE.FLUID, (pressed) -> {
+            if (pressed) setMode(MODE.FLUID);
+        }).setTooltipText("metaitem.cover.digital.mode.fluid");;
+        buttons[1] = new ToggleButtonWidget(60, 20, 20, 20, ClientHandler.BUTTON_ITEM, () -> this.mode == MODE.ITEM, (pressed) -> {
+            if (pressed) setMode(MODE.ITEM);
+        }).setTooltipText("metaitem.cover.digital.mode.item");;
+        buttons[2] = new ToggleButtonWidget(80, 20, 20, 20, ClientHandler.BUTTON_ENERGY, () -> this.mode == MODE.ENERGY, (pressed) -> {
+            if (pressed) setMode(MODE.ENERGY);
+        }).setTooltipText("metaitem.cover.digital.mode.energy");;
+        buttons[3] = new ToggleButtonWidget(100, 20, 20, 20, ClientHandler.BUTTON_MACHINE, () -> this.mode == MODE.MACHINE, (pressed) -> {
+            if (pressed) setMode(MODE.MACHINE);
+        }).setTooltipText("metaitem.cover.digital.mode.machine");;
+        buttons[4] = new ToggleButtonWidget(140, 20, 20, 20, ClientHandler.BUTTON_INTERFACE, () -> this.mode == MODE.PROXY, (pressed) -> {
+            if (pressed) setMode(MODE.PROXY);
+        }).setTooltipText("metaitem.cover.digital.mode.proxy");;
+        primaryGroup.addWidget(new LabelWidget(10, 25, "metaitem.cover.digital.title.mode", 0));
         primaryGroup.addWidget(buttons[0]);
         primaryGroup.addWidget(buttons[1]);
         primaryGroup.addWidget(buttons[2]);
         primaryGroup.addWidget(buttons[3]);
         primaryGroup.addWidget(buttons[4]);
 
-        primaryGroup.addWidget(new LabelWidget(10, 50, "Slot:", 0));
+        primaryGroup.addWidget(new LabelWidget(10, 50, "monitor.gui.title.slot", 0));
         primaryGroup.addWidget(new ClickButtonWidget(40, 45, 20, 20, "-1", (data) -> setMode(slot - (data.isShiftClick? 10 : 1))));
         primaryGroup.addWidget(new ClickButtonWidget(140, 45, 20, 20, "+1", (data) -> setMode(slot + (data.isShiftClick? 10 : 1))));
         primaryGroup.addWidget(new ImageWidget(60, 45, 80, 20, GuiTextures.DISPLAY));
         primaryGroup.addWidget(new SimpleTextWidget(100, 55, "", 16777215, () -> Integer.toString(this.slot)));
 
-        primaryGroup.addWidget(new LabelWidget(10, 75, "Spin:", 0));
+        primaryGroup.addWidget(new LabelWidget(10, 75, "metaitem.cover.digital.title.spin", 0));
         primaryGroup.addWidget(new ClickButtonWidget(40, 70, 20, 20, "R", (data) -> setMode(this.spin.rotateY())));
         primaryGroup.addWidget(new ImageWidget(60, 70, 80, 20, GuiTextures.DISPLAY));
         primaryGroup.addWidget(new SimpleTextWidget(100, 80, "", 16777215, () -> this.spin.toString()));
@@ -842,7 +832,8 @@ public class CoverDigitalInterface extends CoverBehavior implements IFastRenderM
     }
 
     @Override
-    public void renderMetaTileEntityFast(CCRenderState ccRenderState, Matrix4 translation, float partialTicks) {
+    @SideOnly(Side.CLIENT)
+    public void renderMetaTileEntityDynamic(double x, double y, double z, float partialTicks) {
         GlStateManager.pushMatrix();
         /* hack the lightmap */
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
@@ -851,7 +842,7 @@ public class CoverDigitalInterface extends CoverBehavior implements IFastRenderM
         float lastBrightnessY = OpenGlHelper.lastBrightnessY;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
 
-        RenderHelper.moveToFace(translation.m03, translation.m13, translation.m23, this.attachedSide);
+        RenderHelper.moveToFace(x, y, z, this.attachedSide);
         RenderHelper.rotateToFace(this.attachedSide, this.spin);
 
         if (!renderSneakingLookAt(this.coverHolder.getPos(), this.attachedSide, this.slot, partialTicks)) {

@@ -66,7 +66,8 @@ public class RecipeHandler {
         if (GAConfig.GT6.PlateDoubleIngot && GAConfig.GT6.addDoubleIngots) {
             plate.addProcessingHandler(IngotMaterial.class, RecipeHandler::processDoubleIngot);
         }
-        GAEnums.GAOrePrefix.round.addProcessingHandler(IngotMaterial.class, RecipeHandler::processRound);
+        if (GAConfig.GT6.addRounds)
+            GAEnums.GAOrePrefix.round.addProcessingHandler(IngotMaterial.class, RecipeHandler::processRound);
         if (GAConfig.GT6.BendingRings && GAConfig.GT6.BendingCylinders) {
             ring.addProcessingHandler(IngotMaterial.class, RecipeHandler::processRing);
         }
@@ -346,6 +347,7 @@ public class RecipeHandler {
             RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
                     .input(plate, material, 6)
                     .input(frameGt, material, 1)
+                    .notConsumable(new IntCircuitIngredient(0))
                     .outputs(metalCasingStack)
                     .EUt(8).duration(200)
                     .buildAndRegister();
@@ -433,9 +435,7 @@ public class RecipeHandler {
                     .outputs(recipe.getOutputs())
                     .fluidOutputs(recipe.getFluidOutputs());
 
-            recipe.getChancedOutputs().forEach(chanceEntry -> {
-                largeRecipeMap.chancedOutput(chanceEntry.getItemStack(), chanceEntry.getChance(), chanceEntry.getBoostPerTier());
-            });
+            recipe.getChancedOutputs().forEach(chanceEntry -> largeRecipeMap.chancedOutput(chanceEntry.getItemStack(), chanceEntry.getChance(), chanceEntry.getBoostPerTier()));
             largeRecipeMap.buildAndRegister();
         });
     }
@@ -450,9 +450,7 @@ public class RecipeHandler {
                     .outputs(recipe.getOutputs())
                     .fluidOutputs(recipe.getFluidOutputs());
 
-            recipe.getChancedOutputs().forEach(chanceEntry -> {
-                largeRecipeMap.chancedOutput(chanceEntry.getItemStack(), chanceEntry.getChance(), chanceEntry.getBoostPerTier());
-            });
+            recipe.getChancedOutputs().forEach(chanceEntry -> largeRecipeMap.chancedOutput(chanceEntry.getItemStack(), chanceEntry.getChance(), chanceEntry.getBoostPerTier()));
             largeRecipeMap.buildAndRegister();
         });
     }
@@ -493,9 +491,7 @@ public class RecipeHandler {
                     .inputsIngredients(recipe.getInputs())
                     .outputs(recipe.getOutputs())
                     .fluidOutputs(recipe.getFluidOutputs());
-            recipe.getChancedOutputs().forEach(chanceEntry -> {
-                builder.chancedOutput(chanceEntry.getItemStack(), chanceEntry.getChance(), chanceEntry.getBoostPerTier());
-            });
+            recipe.getChancedOutputs().forEach(chanceEntry -> builder.chancedOutput(chanceEntry.getItemStack(), chanceEntry.getChance(), chanceEntry.getBoostPerTier()));
             builder.buildAndRegister();
         });
     }
@@ -509,12 +505,9 @@ public class RecipeHandler {
                     .inputsIngredients(recipe.getInputs())
                     .outputs(recipe.getOutputs())
                     .fluidOutputs(recipe.getFluidOutputs());
-            recipe.getChancedOutputs().forEach(chanceEntry -> {
-                builder.chancedOutput(chanceEntry.getItemStack(), chanceEntry.getChance(), chanceEntry.getBoostPerTier());
-            });
+            recipe.getChancedOutputs().forEach(chanceEntry -> builder.chancedOutput(chanceEntry.getItemStack(), chanceEntry.getChance(), chanceEntry.getBoostPerTier()));
             builder.buildAndRegister();
         });
-        ;
     }
 
     public static void registerAlloyBlastRecipes() {

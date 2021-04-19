@@ -17,6 +17,7 @@ import gregtech.api.gui.Widget;
 import gregtech.api.gui.widgets.AdvancedTextWidget;
 import gregtech.api.gui.widgets.WidgetGroup;
 import gregtech.api.metatileentity.IFastRenderMetaTileEntity;
+import gregtech.api.metatileentity.IRenderMetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -48,6 +49,8 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -58,7 +61,7 @@ import java.util.List;
 import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 import static gregtech.api.unification.material.Materials.Steel;
 
-public class MetaTileEntityCentralMonitor extends MultiblockWithDisplayBase implements IFastRenderMetaTileEntity {
+public class MetaTileEntityCentralMonitor extends MultiblockWithDisplayBase implements IRenderMetaTileEntity {
     private final static long ENERGY_COST = -50;
     public final static int MAX_HEIGHT = 9;
     public final static int MAX_WIDTH = 14;
@@ -68,7 +71,9 @@ public class MetaTileEntityCentralMonitor extends MultiblockWithDisplayBase impl
     private WeakReference<EnergyNet> currentEnergyNet;
     private List<BlockPos> activeNodes;
     public List<Tuple<BlockPos, EnumFacing>> covers;
+    @SideOnly(Side.CLIENT)
     public List<BlockPos> parts;
+    @SideOnly(Side.CLIENT)
     public List<MetaTileEntityMonitorScreen> screens;
     private boolean isActive;
     private EnergyContainerList inputEnergy;
@@ -216,7 +221,7 @@ public class MetaTileEntityCentralMonitor extends MultiblockWithDisplayBase impl
         super.addDisplayText(textList);
         textList.add(new TextComponentTranslation("gtadditions.multiblock.central_monitor.height", this.height));
         if (!isStructureFormed()) {
-            ITextComponent buttonText = new TextComponentTranslation("gtadditions.multiblock.central_monitor.height_modify", new Object[0]);
+            ITextComponent buttonText = new TextComponentTranslation("gtadditions.multiblock.central_monitor.height_modify");
             buttonText.appendText(" ");
             buttonText.appendSibling(AdvancedTextWidget.withButton(new TextComponentString("[-]"), "sub"));
             buttonText.appendText(" ");
@@ -267,6 +272,7 @@ public class MetaTileEntityCentralMonitor extends MultiblockWithDisplayBase impl
             readCovers(buf);
         } else if (id == 3) {
             this.height = buf.readInt();
+            this.reinitializeStructurePattern();
         } else if (id == 4) {
             this.isActive = buf.readBoolean();
         }
@@ -338,8 +344,20 @@ public class MetaTileEntityCentralMonitor extends MultiblockWithDisplayBase impl
         activeNodes = new ArrayList<>();
         covers = new ArrayList<>();
         inputEnergy = new EnergyContainerList(this.getAbilities(MultiblockAbility.INPUT_ENERGY));
-        width = (this.getMultiblockParts().size() - 1) / height;
+        width = 0;
         checkCovers();
+        for (IMultiblockPart part : this.getMultiblockParts()) {
+            if (part instanceof MetaTileEntityMonitorScreen) {
+                ((MetaTileEntityMonitorScreen) part).clickRegister.clear();
+                width++;
+            }
+        }
+        for (IMultiblockPart part : this.getMultiblockParts()) {
+            if (part instanceof MetaTileEntityMonitorScreen) {
+                ((MetaTileEntityMonitorScreen) part).registerClick(false);
+            }
+        }
+        width = width / height;
         writeCustomData(1, packetBuffer -> {
             packetBuffer.writeInt(width);
             packetBuffer.writeInt(height);
@@ -370,56 +388,74 @@ public class MetaTileEntityCentralMonitor extends MultiblockWithDisplayBase impl
     }
 
     @Override
-    public void renderMetaTileEntityFast(CCRenderState ccRenderState, Matrix4 matrix4, float partialTicks) {
-        if (!this.isStructureFormed()) return;
-        GlStateManager.pushMatrix();
-        RenderHelper.moveToFace(matrix4.m03 - this.frontFacing.rotateY().getXOffset() * 0.5, matrix4.m13 + height - 1.5, matrix4.m23 - this.frontFacing.rotateY().getZOffset() * 0.5, this.frontFacing);
-        RenderHelper.rotateToFace(this.frontFacing, EnumFacing.EAST);
-        RenderHelper.renderRect(0, 0, width, height, 0.001f, 0xFF000000);
-        GlStateManager.popMatrix();
-        if (isActive) {
-            GlStateManager.pushMatrix();
-            /* hack the lightmap */
-            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-            net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-            float lastBrightnessX = OpenGlHelper.lastBrightnessX;
-            float lastBrightnessY = OpenGlHelper.lastBrightnessY;
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
+    @SideOnly(Side.CLIENT)
+    public boolean isGlobalRenderer() {
+        return true;
+    }
 
-            if(screens.size() != parts.size()) {
-                screens.clear();
-                for (BlockPos pos : parts) {
-                    TileEntity tileEntity = getWorld().getTileEntity(pos);
-                    if(tileEntity instanceof MetaTileEntityHolder && ((MetaTileEntityHolder) tileEntity).getMetaTileEntity() instanceof MetaTileEntityMonitorScreen) {
-                        screens.add((MetaTileEntityMonitorScreen) ((MetaTileEntityHolder) tileEntity).getMetaTileEntity());
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void renderMetaTileEntityDynamic(double x, double y, double z, float partialTicks) {
+        if (!this.isStructureFormed()) return;
+        RenderHelper.useStencil(()->{
+            GlStateManager.pushMatrix();
+            RenderHelper.moveToFace(x - this.frontFacing.rotateY().getXOffset() * 0.5, y + height - 1.5, z - this.frontFacing.rotateY().getZOffset() * 0.5, this.frontFacing);
+            RenderHelper.rotateToFace(this.frontFacing, EnumFacing.EAST);
+            RenderHelper.renderRect(0, 0, width, height, 0.001f, 0xFF000000);
+            GlStateManager.popMatrix();
+        }, ()->{
+            if (isActive) {
+                GlStateManager.pushMatrix();
+                /* hack the lightmap */
+                GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
+                net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+                float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+                float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
+
+                if(screens.size() != parts.size()) {
+                    screens.clear();
+                    for (BlockPos pos : parts) {
+                        TileEntity tileEntity = getWorld().getTileEntity(pos);
+                        if(tileEntity instanceof MetaTileEntityHolder && ((MetaTileEntityHolder) tileEntity).getMetaTileEntity() instanceof MetaTileEntityMonitorScreen) {
+                            MetaTileEntityMonitorScreen screen = (MetaTileEntityMonitorScreen) ((MetaTileEntityHolder) tileEntity).getMetaTileEntity();
+                            screen.addToMultiBlock(this);
+                            screens.add(screen);
+                        }
+                    }
+                    for (MetaTileEntityMonitorScreen screen : screens) {
+                        screen.clickRegister.clear();
+                    }
+                    for (MetaTileEntityMonitorScreen screen : screens) {
+                        screen.registerClick(false);
                     }
                 }
+
+                screens.forEach(screen -> {
+                    if (screen != null && screen.isActive()) {
+                        BlockPos pos = screen.getPos();
+                        BlockPos pos2 = this.getPos();
+                        GlStateManager.pushMatrix();
+                        RenderHelper.moveToFace(x + pos.getX() - pos2.getX(), y + pos.getY() - pos2.getY(), z + pos.getZ() - pos2.getZ(), this.frontFacing);
+                        RenderHelper.rotateToFace(this.frontFacing, EnumFacing.EAST);
+                        screen.renderScreen(partialTicks);
+                        GlStateManager.popMatrix();
+                    }
+                });
+
+                /* restore the lightmap  */
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+                net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+                GL11.glPopAttrib();
+                GlStateManager.popMatrix();
             }
-
-            screens.forEach(screen -> {
-                if (screen != null && screen.isActive()) {
-                    BlockPos pos = screen.getPos();
-                    BlockPos pos2 = this.getPos();
-                    GlStateManager.pushMatrix();
-                    RenderHelper.moveToFace(matrix4.m03 + pos.getX() - pos2.getX(), matrix4.m13 + pos.getY() - pos2.getY(), matrix4.m23 + pos.getZ() - pos2.getZ(), this.frontFacing);
-                    RenderHelper.rotateToFace(this.frontFacing, EnumFacing.EAST);
-                    screen.renderScreen(partialTicks);
-                    GlStateManager.popMatrix();
-                }
-            });
-
-            /* restore the lightmap  */
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
-            net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
-            GL11.glPopAttrib();
-            GlStateManager.popMatrix();
-        }
+        }, true);
     }
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         BlockPos sp = this.getPos().offset(EnumFacing.DOWN);
-        BlockPos ep = sp.offset(this.frontFacing.rotateY(), -width - 1).offset(EnumFacing.UP, height);
+        BlockPos ep = sp.offset(this.frontFacing.rotateY(), -width - 2).offset(EnumFacing.UP, height);
         return new AxisAlignedBB(sp, ep);
     }
 

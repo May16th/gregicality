@@ -19,6 +19,8 @@ import gregtech.api.multiblock.PatternMatchContext;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.render.ICubeRenderer;
+import gregtech.api.render.OrientedOverlayRenderer;
+import gregtech.api.render.Textures;
 import gregtech.api.unification.material.Materials;
 import gregtech.common.blocks.BlockWireCoil;
 import net.minecraft.block.state.IBlockState;
@@ -29,6 +31,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -160,5 +163,11 @@ public class MetaTileEntityElectricBlastFurnace extends RecipeMapMultiblockContr
 
 	public IBlockState getCasingState() {
 		return GAMetaBlocks.getMetalCasingBlockState(Invar);
+	}
+
+	@Nonnull
+	@Override
+	protected OrientedOverlayRenderer getFrontOverlay() {
+		return Textures.PRIMITIVE_BLAST_FURNACE_OVERLAY;
 	}
 }

@@ -6,6 +6,7 @@ import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
 import gregicadditions.GAConfig;
 import gregicadditions.GAValues;
+import gregicadditions.client.ClientHandler;
 import gregicadditions.item.behaviors.DataStickFluidSamplerBehavior;
 import gregicadditions.utils.GALog;
 import gregicadditions.worldgen.DimensionChunkCoords;
@@ -39,7 +40,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import org.apache.commons.lang3.ArrayUtils;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 import static gregtech.common.items.MetaItems.TOOL_DATA_STICK;
 
@@ -128,7 +130,7 @@ public class MetaTileEntitySolarSampler extends MetaTileEntity implements IWorka
     protected IItemHandlerModifiable createImportItemHandler() {
         return new ItemStackHandler(1) {
             @Override
-            public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 return stack.isItemEqualIgnoreDurability(TOOL_DATA_STICK.getStackForm(1));
             }
         };
@@ -139,7 +141,7 @@ public class MetaTileEntitySolarSampler extends MetaTileEntity implements IWorka
     protected IItemHandlerModifiable createExportItemHandler() {
         return new ItemStackHandler(1) {
             @Override
-            public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 return false;
             }
         };
@@ -154,6 +156,7 @@ public class MetaTileEntitySolarSampler extends MetaTileEntity implements IWorka
     public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
         IVertexOperation[] colouredPipeline = ArrayUtils.add(pipeline, new ColourMultiplier(GTUtility.convertRGBtoOpaqueRGBA_CL(getPaintingColorForRendering())));
         getBaseRenderer().render(renderState, translation, colouredPipeline);
+        ClientHandler.PRINTER_OVERLAY.render(renderState, translation, pipeline, this.getFrontFacing(), this.isActive());
     }
 
     @SideOnly(Side.CLIENT)

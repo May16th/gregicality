@@ -325,11 +325,11 @@ public class MachineCraftingRecipes {
         ModHandler.addShapedRecipe("ga_industrial_primitive_blast_furnace", GATileEntities.INDUSTRIAL_PRIMITIVE_BLAST_FURNACE.getStackForm(), "PFP", "FOF", "PFP", 'P', MetaBlocks.METAL_CASING.getItemVariant(PRIMITIVE_BRICKS), 'F', OreDictNames.craftingFurnace, 'O', MetaTileEntities.PRIMITIVE_BLAST_FURNACE.getStackForm());
         ModHandler.addShapedRecipe("ga_cryogenic_freezer", GATileEntities.CRYOGENIC_FREEZER.getStackForm(), "GCG", "IHI", "PCP", 'H', GATileEntities.VACUUM_FREEZER.getStackForm(), 'C', new UnificationEntry(circuit, Tier.Elite), 'P', new UnificationEntry(plateDense, GAMaterials.HG1223), 'G', new UnificationEntry(gear, GAMaterials.IncoloyMA956), 'I', MetaItems.ELECTRIC_PISTON_IV);
         GARecipeMaps.ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(1200).EUt(30720).fluidInputs(Kanthal.getFluid(2304), Bronze.getFluid(9216), BabbittAlloy.getFluid(2304), SolderingAlloy.getFluid(L * 10)).inputs(CountableIngredient.from(circuit, Tier.Elite), CountableIngredient.from(circuit, Tier.Elite)).inputs(GAMetaBlocks.MUTLIBLOCK_CASING.getItemVariant(GAMultiblockCasing.CasingType.TIERED_HULL_IV, 2), GATileEntities.DISTILLATION_TOWER.getStackForm(2)).outputs(GATileEntities.ADVANCED_DISTILLATION_TOWER.getStackForm()).buildAndRegister();
-        RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder().fluidInputs(Steel.getFluid(144 * 4)).input(OrePrefix.valueOf("gtMetalCasing"), Steel, 2).input(plate, Aluminium, 32).input(gear, Steel, 4).input(dust, CobaltBrass, 16).inputs(GAMetaBlocks.MUTLIBLOCK_CASING.getItemVariant(GAMultiblockCasing.CasingType.TIERED_HULL_LV)).outputs(GATileEntities.CHEMICAL_PLANT.getStackForm()).duration(2400).EUt(120).buildAndRegister();
+        RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder().fluidInputs(Steel.getFluid(144 * 4)).input(OrePrefix.valueOf("gtMetalCasing"), Steel, 2).input(plate, Aluminium, 32).input(gear, Steel, 4).input(plate, CobaltBrass, 16).inputs(GAMetaBlocks.MUTLIBLOCK_CASING.getItemVariant(GAMultiblockCasing.CasingType.TIERED_HULL_LV)).outputs(GATileEntities.CHEMICAL_PLANT.getStackForm()).duration(2400).EUt(120).buildAndRegister();
         ModHandler.addShapedRecipe("ga_large_forge_hammer", GATileEntities.LARGE_FORGE_HAMMER.getStackForm(), "PCP", "CHC", "PCP", 'H', MetaTileEntities.FORGE_HAMMER[0].getStackForm(), 'C', new UnificationEntry(circuit, Tier.Basic), 'P', MetaItems.ELECTRIC_PISTON_MV);
         ModHandler.addShapedRecipe("ga_battery_tower", GATileEntities.BATTERY_TOWER.getStackForm(), "PCP", "CHC", "PCP", 'H', MetaTileEntities.HULL[GAValues.HV].getStackForm(), 'C', new UnificationEntry(circuit, Tier.Extreme), 'P', new UnificationEntry(OrePrefix.valueOf("gtMetalCasing"), Talonite));
         ModHandler.addShapedRecipe("ga_gas_centrifuge", GATileEntities.GAS_CENTRIFUGE.getStackForm(), "PCP", "CHC", "PDP", 'H', MetaTileEntities.HULL[GAValues.HV].getStackForm(), 'C', MetaTileEntities.THERMAL_CENTRIFUGE[GAValues.HV].getStackForm(), 'D', MetaTileEntities.CENTRIFUGE[GAValues.HV].getStackForm(), 'P', GAMetaBlocks.MOTOR_CASING.getItemVariant(MotorCasing.CasingType.MOTOR_HV));
-        ModHandler.addShapedRecipe("ga_large_packager", GATileEntities.LARGE_PACKAGER.getStackForm(), "BCR", "PHU", "CMC", 'H', MetaTileEntities.HULL[GAValues.LuV].getStackForm(), 'C', new UnificationEntry(circuit, Tier.Master), 'P', GAConfig.GT5U.highTierPackers ? GATileEntities.PACKER[GAValues.EV].getMetaTileEntity().getStackForm() : MetaTileEntities.PACKER[GAValues.EV - 1].getStackForm(), 'U', GAConfig.GT5U.highTierUnpackers ? GATileEntities.UNPACKER[GAValues.EV].getMetaTileEntity().getStackForm() : MetaTileEntities.UNPACKER[GAValues.EV - 1].getStackForm(), 'B' , MetaItems.CONVEYOR_MODULE_LUV, 'R', MetaItems.ROBOT_ARM_LUV, 'M', new UnificationEntry(plate, GAMaterials.HG1223));
+        ModHandler.addShapedRecipe("ga_large_packager", GATileEntities.LARGE_PACKAGER.getStackForm(), "BCR", "PHU", "CMC", 'H', MetaTileEntities.HULL[GAValues.IV].getStackForm(), 'C', new UnificationEntry(circuit, Tier.Master), 'P', GAConfig.GT5U.highTierPackers ? GATileEntities.PACKER[GAValues.EV].getMetaTileEntity().getStackForm() : MetaTileEntities.PACKER[GAValues.EV - 1].getStackForm(), 'U', GAConfig.GT5U.highTierUnpackers ? GATileEntities.UNPACKER[GAValues.EV].getMetaTileEntity().getStackForm() : MetaTileEntities.UNPACKER[GAValues.EV - 1].getStackForm(), 'B' , MetaItems.CONVEYOR_MODULE_IV, 'R', MetaItems.ROBOT_ARM_IV, 'M', new UnificationEntry(plate, GAMaterials.HG1223));
 
         GARecipeMaps.ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(1200).EUt(30720)
                 .fluidInputs(Lubricant.getFluid(2304),
@@ -369,7 +369,7 @@ public class MachineCraftingRecipes {
                 .outputs(GATileEntities.VOID_MINER[0].getStackForm()).buildAndRegister();
         GARecipeMaps.ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(600).EUt(500000)
                 .fluidInputs(SolderingAlloy.getFluid(144 * 27))
-                .fluidInputs(Polyetheretherketone.getFluid(2500))
+                .fluidInputs(Polyetheretherketone.getFluid(2592))
                 .inputs(GAMetaItems.SENSOR_UHV.getStackForm(2))
                 .inputs(GAMetaItems.ELECTRIC_MOTOR_UHV.getStackForm(8))
                 .input(wireGtSingle, UHVSuperconductor, 64)
@@ -387,7 +387,7 @@ public class MachineCraftingRecipes {
                 .outputs(GATileEntities.VOID_MINER[1].getStackForm()).buildAndRegister();
         GARecipeMaps.ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(600).EUt(2000000)
                 .fluidInputs(SolderingAlloy.getFluid(144 * 27 * 2))
-                .fluidInputs(Zylon.getFluid(2500))
+                .fluidInputs(Zylon.getFluid(2592))
                 .inputs(GAMetaItems.SENSOR_UEV.getStackForm(2))
                 .inputs(GAMetaItems.ELECTRIC_MOTOR_UEV.getStackForm(8))
                 .input(wireGtSingle, UEVSuperconductor, 64)
@@ -637,12 +637,17 @@ public class MachineCraftingRecipes {
         RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder().duration(3000).EUt(480).fluidInputs(SolderingAlloy.getFluid(GTValues.L * 10)).inputs(ELECTRIC_PUMP_HV.getStackForm(2), MetaTileEntities.PUMP[2].getStackForm()).input(circuit, Tier.Advanced, 2).input(GAEnums.GAOrePrefix.gtMetalCasing, StainlessSteel, 5).outputs(GATileEntities.DRILLING_RIG.getStackForm()).buildAndRegister();
         ModHandler.addShapedRecipe("ga_solar_sampler", GATileEntities.SOLAR_FLUID_SAMPLER.getStackForm(), "GGG", "PCP", "EDE", 'G', new ItemStack(Blocks.GLASS, 1), 'P', new UnificationEntry(plate, StainlessSteel), 'C', MetaTileEntities.HULL[GTValues.HV].getStackForm(), 'D', new UnificationEntry(toolHeadDrill, StainlessSteel), 'E', new UnificationEntry(cableGtSingle, Gold));
 
+        OrePrefix roundOrScrew;
+        if (GAConfig.GT6.addRounds)
+            roundOrScrew = GAEnums.GAOrePrefix.round;
+        else
+            roundOrScrew = screw;
         RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder().duration(120).EUt(6000000).fluidInputs(SolderingAlloy.getFluid(GTValues.L * 10)).inputs(FIELD_GENERATOR_UEV.getStackForm(2), ROBOT_ARM_UEV.getStackForm()).input(circuit, UEV, 7).input(frameGt, Bohrium, 5).outputs(GAMetaBlocks.QUANTUM_CASING.getItemVariant(GAQuantumCasing.CasingType.COMPUTER, 3)).buildAndRegister();
         ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(1000).EUt(8000000)
                 .input(frameGt, Bohrium, 16)
                 .input(plate, Bohrium, 16)
                 .input(gearSmall, Bohrium, 16)
-                .input(GAEnums.GAOrePrefix.round, Bohrium, 16)
+                .input(roundOrScrew, Bohrium, 16)
                 .inputs(GAMetaBlocks.QUANTUM_CASING.getItemVariant(GAQuantumCasing.CasingType.COMPUTER, 4))
                 .inputs(GAMetaBlocks.QUANTUM_CASING.getItemVariant(GAQuantumCasing.CasingType.COMPUTER, 4))
                 .inputs(GAMetaBlocks.QUANTUM_CASING.getItemVariant(GAQuantumCasing.CasingType.COMPUTER, 4))
@@ -673,16 +678,21 @@ public class MachineCraftingRecipes {
         RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder().inputs(MetaTileEntities.LARGE_STEEL_BOILER.getStackForm()).inputs(CountableIngredient.from(plate, Titanium, 2), CountableIngredient.from(circuit, Tier.Advanced, 2)).outputs(MetaTileEntities.LARGE_TITANIUM_BOILER.getStackForm()).EUt(500).duration(600).buildAndRegister();
         RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder().inputs(MetaTileEntities.LARGE_TITANIUM_BOILER.getStackForm()).inputs(CountableIngredient.from(plate, TungstenSteel, 2), CountableIngredient.from(circuit, Tier.Advanced, 2)).outputs(MetaTileEntities.LARGE_TUNGSTENSTEEL_BOILER.getStackForm()).EUt(2000).duration(600).buildAndRegister();
 
+        String plateB = new String("plate");
+        if (GAConfig.GT6.addCurvedPlates) {
+            plateB = "plateCurved";
+        }
+
         //Storage
         if (GAConfig.GT6.registerDrums) {
             ModHandler.addShapedRecipe("wooden_barrel", GATileEntities.WOODEN_DRUM.getStackForm(), "rSs", "PRP", "PRP", 'S', "slimeball", 'P', "plankWood", 'R', "stickLongIron");
         }
         if (GAConfig.GT6.BendingCurvedPlates && GAConfig.GT6.BendingCylinders && GAConfig.GT6.registerDrums) {
-            ModHandler.addShapedRecipe("bronze_drum", GATileEntities.BRONZE_DRUM.getStackForm(), " h ", "PRP", "PRP", 'P', "plateCurvedBronze", 'R', "stickLongBronze");
-            ModHandler.addShapedRecipe("steel_drum", GATileEntities.STEEL_DRUM.getStackForm(), " h ", "PRP", "PRP", 'P', "plateCurvedSteel", 'R', "stickLongSteel");
-            ModHandler.addShapedRecipe("stainless_steel_drum", GATileEntities.STAINLESS_STEEL_DRUM.getStackForm(), " h ", "PRP", "PRP", 'P', "plateCurvedStainlessSteel", 'R', "stickLongStainlessSteel");
-            ModHandler.addShapedRecipe("titanium_drum", GATileEntities.TITANIUM_DRUM.getStackForm(), " h ", "PRP", "PRP", 'P', "plateCurvedTitanium", 'R', "stickLongTitanium");
-            ModHandler.addShapedRecipe("tungstensteel_drum", GATileEntities.TUNGSTENSTEEL_DRUM.getStackForm(), " h ", "PRP", "PRP", 'P', "plateCurvedTungstenSteel", 'R', "stickLongTungstenSteel");
+            ModHandler.addShapedRecipe("bronze_drum", GATileEntities.BRONZE_DRUM.getStackForm(), " h ", "PRP", "PRP", 'P', plateB + "Bronze", 'R', "stickLongBronze");
+            ModHandler.addShapedRecipe("steel_drum", GATileEntities.STEEL_DRUM.getStackForm(), " h ", "PRP", "PRP", 'P', plateB + "Steel", 'R', "stickLongSteel");
+            ModHandler.addShapedRecipe("stainless_steel_drum", GATileEntities.STAINLESS_STEEL_DRUM.getStackForm(), " h ", "PRP", "PRP", 'P', plateB + "StainlessSteel", 'R', "stickLongStainlessSteel");
+            ModHandler.addShapedRecipe("titanium_drum", GATileEntities.TITANIUM_DRUM.getStackForm(), " h ", "PRP", "PRP", 'P', plateB + "Titanium", 'R', "stickLongTitanium");
+            ModHandler.addShapedRecipe("tungstensteel_drum", GATileEntities.TUNGSTENSTEEL_DRUM.getStackForm(), " h ", "PRP", "PRP", 'P', plateB + "TungstenSteel", 'R', "stickLongTungstenSteel");
         } else if (!(GAConfig.GT6.BendingCurvedPlates || GAConfig.GT6.BendingCylinders) && GAConfig.GT6.registerDrums) {
             ModHandler.addShapedRecipe("bronze_drum", GATileEntities.BRONZE_DRUM.getStackForm(), " h ", "PRP", "PRP", 'P', "plateBronze", 'R', "stickLongBronze");
             ModHandler.addShapedRecipe("steel_drum", GATileEntities.STEEL_DRUM.getStackForm(), " h ", "PRP", "PRP", 'P', "plateSteel", 'R', "stickLongSteel");
@@ -932,6 +942,20 @@ public class MachineCraftingRecipes {
         ModHandler.addShapedRecipe("ga_steam_output_bus", GATileEntities.STEAM_OUTPUT_BUS.getStackForm(), "BTB", "MHM", "BTB", 'B', new UnificationEntry(plate, Bronze), 'M', new UnificationEntry(plate, Potin), 'T', new UnificationEntry(plate, Tin), 'H', Blocks.CHEST);
         ModHandler.addShapedRecipe("ga_steam_oven", GATileEntities.STEAM_OVEN.getStackForm(), "CGC", "FMF", "CGC", 'F', MetaBlocks.BOILER_FIREBOX_CASING.getItemVariant(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX), 'C', new UnificationEntry(GAEnums.GAOrePrefix.gtMetalCasing, Bronze), 'M', MetaTileEntities.STEAM_FURNACE_BRONZE.getStackForm(), 'G', new UnificationEntry(gear, Invar));
 
+        ASSEMBLY_LINE_RECIPES.recipeBuilder()
+                .inputs(GATileEntities.IMPLOSION_COMPRESSOR.getStackForm())
+                .input(block, Americium, 2)
+                .input(stickLong, Osmium, 64)
+                .input(ring, Osmium, 64)
+                .input(wireGtSingle, UVSuperconductor, 16)
+                .inputs(ELECTRIC_PISTON_UV.getStackForm(16))
+                .fluidInputs(SolderingAlloy.getFluid(1440))
+                .fluidInputs(Osmium.getFluid(1440))
+                .fluidInputs(Americium.getFluid(1440))
+                .outputs(GATileEntities.ELECTRIC_IMPLOSION.getStackForm())
+                .EUt(491520)
+                .duration(48000)
+                .buildAndRegister();
     }
 
     public static <T extends MetaTileEntity & ITieredMetaTileEntity> void registerMachineRecipe(T[] metaTileEntities, Object... recipe) {
