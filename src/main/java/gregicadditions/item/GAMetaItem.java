@@ -41,7 +41,6 @@ public class GAMetaItem extends MaterialMetaItem {
 
     @Override
     public void registerSubItems() {
-        GLASS_FIBER = addItem(21, "component.glass.fiber");
         PETRI_DISH = addItem(23, "component.petri.dish");
 
         if (Loader.isModLoaded("forestry") && GAConfig.GT6.electrodes) {
@@ -158,6 +157,9 @@ public class GAMetaItem extends MaterialMetaItem {
                 .setMaxStackSize(1)
                 .addComponents(new FluidStats(64000, Integer.MIN_VALUE, Integer.MAX_VALUE, true))
                 .addComponents(new HandPumpBehavior());
+        FREEDOM_WRENCH = addItem(309, "freedom_wrench")
+                .setMaxStackSize(1)
+                .addComponents(new FreedomWrenchBehaviour());
 
         PROTACTINIUM_WASTE = addItem(311, "waste.nuclear").addComponents(new WasteBehavior(Protactinium.getMaterial()));
         NUCLEAR_WASTE = addItem(312, "waste.nuclear").addComponents(new WasteBehavior("waste.nuclear.global", 0xDEDEDE));
@@ -483,6 +485,8 @@ public class GAMetaItem extends MaterialMetaItem {
         BATTERY_MEDIUM_FLUORIDE_EMPTY = addItem(582,"medium.fluoride.battery.empty");
         BATTERY_LARGE_FLUORIDE_EMPTY = addItem(583,"large.fluoride.battery.empty");
 
+        KAPTON_BOARD = addItem(584, "board.kapton");
+        KAPTON_CIRCUIT_BOARD = addItem(585, "board_circuit.kapton");
 
         NEURO_PROCESSOR = addItem(15, "processor.neuro");
         PYROLYTIC_CARBON = addItem(16, "pyrolytic_carbon");
